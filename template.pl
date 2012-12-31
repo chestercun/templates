@@ -7,8 +7,8 @@ my $type = ($ARGV[0]) ? $ARGV[0] : -1;
 
 # supported languages
 my $templates = {
-	1 => "C",
-	2 => "C++",
+  1 => "C",
+  2 => "C++",
   3 => "Ruby",
   4 => "Perl",
   5 => "Python",
@@ -21,22 +21,22 @@ unless ($templates->{$type}) {
   print "\n";
   print "\t\tTypes:\n";
   foreach my $key (sort keys %$templates) {
-  	print "\t$key: $templates->{$key}\n";
+    print "\t$key: $templates->{$key}\n";
   }
   print "\n";
 }
 
 # helper function
 sub textFile {
-	my $filename = shift;     # string
-	my $text = shift;         # array ref
-	open FILE, ">$filename" or die $!;
-	if (ref($text) eq 'ARRAY') {
-		foreach my $line (@$text) {
-			print FILE $line;
+  my $filename = shift;     # string
+  my $text = shift;         # array ref
+  open FILE, ">$filename" or die $!;
+  if (ref($text) eq 'ARRAY') {
+    foreach my $line (@$text) {
+      print FILE $line;
     }
   } else {
-  	print FILE $text;
+    print FILE $text;
   }
   close FILE;
 }
@@ -185,16 +185,16 @@ sub debug {
 }
 
 sub textFile {
-	my \$filename = shift;     # string
-	my \$text = shift;         # array ref
-	open FILE, ">\$filename" or die \$!;
-	if (ref(\$text) eq 'ARRAY') {
-		foreach my \$line (\@\$text) {
-			print FILE \$line;
-			print FILE "\\n";
+  my \$filename = shift;     # string
+  my \$text = shift;         # array ref
+  open FILE, ">\$filename" or die \$!;
+  if (ref(\$text) eq 'ARRAY') {
+    foreach my \$line (\@\$text) {
+      print FILE \$line;
+      print FILE "\\n";
     }
   } else {
-  	print FILE \$text;
+    print FILE \$text;
   }
   close FILE;
 }
