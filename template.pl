@@ -11,6 +11,7 @@ my $templates = {
 	2 => "C++",
   3 => "Ruby",
   4 => "Perl",
+  5 => "Python",
 };
 
 
@@ -211,6 +212,60 @@ use $packageName;
 # script starts here
 
 exit;
+END
+;
+
+} elsif ($type == 5) {
+  ##########################################
+  #
+  #                 Python
+  #
+  ##########################################
+  my ($packageName, $uPackageName);
+  $packageName = ($ARGV[1]) ? $ARGV[1] : "common";
+  $packageName =~ s/[^a-z]//g;
+  ($uPackageName = $packageName) =~ s/(\w+)/\u$1/;
+
+textFile "main.py", <<END
+#!/usr/bin/python
+import sys
+sys.path.append("./$packageName")
+import $packageName
+from node import Node
+
+$packageName.f1( 1, 'chester', {} )
+n = Node("The Guy")
+n.debug()
+
+END
+;
+  
+  # create the directory
+  `mkdir $packageName`;
+
+textFile "$packageName/$packageName.py", <<END
+# sample function
+def f1( n, s, o ):
+  print "hello, world!"
+
+END
+;
+
+textFile "$packageName/node.py", <<END
+class Node:
+  """
+  Sample Linked List Node class
+  """
+  def __init__(self, name="chester"):
+    self.name = name
+    self.adj = []
+    self.next = None
+    self.prev = None
+    self.data = {}
+
+  # always gets self
+  def debug(self):
+    print "debugging"
 END
 ;
 
