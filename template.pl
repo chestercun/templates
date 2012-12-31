@@ -41,7 +41,11 @@ sub textFile {
 }
 
 if ($type == 1) {
-  # C setup
+  ##########################################
+  #
+  #                   C
+  #
+  ##########################################
 
 textFile "test.sh", qq{
 make all clean
@@ -74,7 +78,11 @@ int main(int argc, char* argv[]) {
 END
 
 } elsif ($type == 2) {
-  # C++
+  ##########################################
+  #
+  #                 C++
+  #
+  ##########################################
 textFile "test.sh", qq{
 make all clean
 ./a.out command line args here
@@ -102,14 +110,56 @@ int main(int argc, char* argv[]) {
 };
 END
 } elsif ($type == 3) {
-  # Ruby
+  ##########################################
+  #
+  #                 Ruby
+  #
+  ##########################################
+  my ($packageName, $uPackageName);
+  $packageName = ($ARGV[1]) ? $ARGV[1] : "common";
+  $packageName =~ s/[^a-z]//g;
+  ($uPackageName = $packageName) =~ s/(\w+)/\u$1/;
+
+textFile "$packageName.rb", <<END
+module $uPackageName
+  def debug(*args)
+    puts args.inspect
+  end
+end
+
+class File
+  def to_a
+    result = []
+    each do |line|
+      result.push( line.sub(/\\s+\$/,"") )
+    end
+    result
+  end
+end
+
+if __FILE__ == \$0
+  # testing purposes
+end
+END
+;
+
 textFile "main.rb", <<END
 #!/usr/bin/ruby
+\$: << "."
+require '$packageName'
 
+# script starts here
+
+exit
 END
+;
 
 } elsif ($type == 4) {
-  # Perl
+  ##########################################
+  #
+  #                 Perl
+  #
+  ##########################################
   my $packageName = ($ARGV[1]) ? $ARGV[1] : "common";
   $packageName =~ s/[^a-z]//g;
 
