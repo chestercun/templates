@@ -161,7 +161,9 @@ textFile "main.rb", <<END
 require '$packageName'
 
 # script starts here
-f = File.new("input.txt").to_a
+fn = (ARGV[0]) ? ARGV[0] : "input.txt"
+f = File.new( fn ).to_a
+puts f.inspect
 
 exit
 END
@@ -189,6 +191,7 @@ our \@EXPORT = qw(
   debug
   textFile
   lineArray
+  trim
 );
 
 use Data::Dumper;
@@ -212,16 +215,26 @@ sub textFile {
   close FILE;
 }
 
+sub trim {
+	my \$result = shift;
+	\$result =~ s/^\\s//;
+	\$result =~ s/\\s+\$//;
+	return \$result;
+}
+
 sub lineArray {
-  my \$fileName = $_[0];
+  my \$fileName = shift;
   open FILE, "\$fileName" or die \$!;
   my \@lines = <FILE>;
+  \@lines = map { trim(\$_) } \@lines;
   return \\\@lines;
 }
 
 1;
 END
 ;
+  # extra file
+  `touch input.txt`;
 
 textFile "main.pl", <<END
 #!/usr/bin/perl
@@ -230,6 +243,9 @@ use warnings;
 use $packageName;
 
 # script starts here
+my \$fileName = (\$ARGV[0]) ? \$ARGV[0] : "input.txt";
+my \$lines = lineArray "\$fileName";
+debug \$lines;
 
 exit;
 END
