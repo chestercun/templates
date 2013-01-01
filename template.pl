@@ -121,13 +121,12 @@ END
   $packageName =~ s/[^a-z]//g;
   ($uPackageName = $packageName) =~ s/(\w+)/\u$1/;
 
-textFile "$packageName.rb", <<END
-module $uPackageName
-  def debug(*args)
-    puts args.inspect
-  end
-end
+  # create directory
+  `mkdir lib`;
+  `touch input.txt`; # sample file
 
+  # simple file utility
+textFile "./lib/file_util.rb", <<END
 class File
   def to_a
     result = []
@@ -137,6 +136,18 @@ class File
     result
   end
 end
+END
+;
+
+textFile "$packageName.rb", <<END
+require "./lib/file_util"
+
+module $uPackageName
+  def debug(*args)
+    puts args.inspect
+  end
+end
+
 
 if __FILE__ == \$0
   # testing purposes
@@ -150,6 +161,7 @@ textFile "main.rb", <<END
 require '$packageName'
 
 # script starts here
+f = File.new("input.txt").to_a
 
 exit
 END
@@ -176,6 +188,7 @@ our \@ISA = qw(Exporter);
 our \@EXPORT = qw(
   debug
   textFile
+  lineArray
 );
 
 use Data::Dumper;
@@ -197,6 +210,13 @@ sub textFile {
     print FILE \$text;
   }
   close FILE;
+}
+
+sub lineArray {
+  my \$fileName = $_[0];
+  open FILE, "\$fileName" or die \$!;
+  my \@lines = <FILE>;
+  return \\\@lines;
 }
 
 1;
