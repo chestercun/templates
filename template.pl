@@ -266,12 +266,20 @@ textFile "main.py", <<END
 #!/usr/bin/python
 import sys
 sys.path.append("./$packageName")
-import $packageName
-from node import Node
+#import util
+#from node import Node
+from util import *
+from node import *
 
-$packageName.f1( 1, 'chester', {} )
+#util.f1( 1, 'chester', {} )
+f1( 1, 'chester', {} )
+f2()
+
 n = Node("The Guy")
 n.debug()
+
+m = Nyde()
+m.debug()
 
 END
 ;
@@ -279,15 +287,28 @@ END
   # create the directory
   `mkdir $packageName`;
 
-textFile "$packageName/$packageName.py", <<END
+textFile "$packageName/util.py", <<END
+__all__ = ["f1","f2"]
+
 # sample function
 def f1( n, s, o ):
   print "hello, world!"
+
+def f2():
+  print "hello, wordly!"
 
 END
 ;
 
 textFile "$packageName/node.py", <<END
+__all__ = ["Node","Nyde"]
+
+class Nyde:
+  def __init__(self):
+    self.confused = True
+  def debug(self):
+    print "debugging nyde"
+
 class Node:
   """
   Sample Linked List Node class
@@ -301,7 +322,8 @@ class Node:
 
   # always gets self
   def debug(self):
-    print "debugging"
+    print "debugging node"
+
 END
 ;
 
